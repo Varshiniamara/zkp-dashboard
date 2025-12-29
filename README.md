@@ -1,5 +1,8 @@
 # ZKP Dashboard: Privacy-Preserving Logic & Proof Visualization
 
+## 🌐 Live Demo
+**[Launch Application](https://zkp-dashboard-c5xe.vercel.app/)**
+
 This project demonstrates a comprehensive Zero-Knowledge Proof (ZKP) system, integrating **zk-SNARKs**, **zk-STARKs**, and **zk-Rollups** into a unified dashboard. It features a novel **Hybrid ZKP Framework** that orchestrates these technologies to achieve privacy, scalability, and transparency simultaneously.
 
 ## 🚀 Features
