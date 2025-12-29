@@ -47,57 +47,60 @@ class ApiClient {
   }
 
   /**
-   * Base fetch method with error handling
+   * Base fetch method with error handling & Forced Simulation
    */
   private async fetch<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
-    const url = `${this.baseUrl}${endpoint}`;
+    // const url = `${this.baseUrl}${endpoint}`;
 
-    const headers = new Headers(options.headers);
+    // FORCED SIMULATION FOR VERCEL/STATIC DEPLOYMENTS
+    // This ensures the demo works 100% without a backend server running
+    const SIMULATION_MODE = true;
 
-    if (!headers.has('Content-Type')) {
-      headers.set('Content-Type', 'application/json');
-    }
-
-    if (this.authToken) {
-      headers.set('Authorization', `Bearer ${this.authToken}`);
-    }
-
-    // Force simulation for ZKP generation to ensure demo logic is used
-    if (endpoint.includes('/zkp/generate')) {
-      // Proceed to simulation logic directly
-      // throw new Error('Force simulation');
+    if (SIMULATION_MODE) {
+      console.log(`🔌 Simulation Mode: Intercepting request to ${endpoint}`);
+      // Fall through to the simulation logic below
     } else {
-      try {
-        // Attempt actual network request
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), 5000); // 5s timeout
+      /* 
+     const headers = new Headers(options.headers);
 
-        const response = await fetch(url, {
-          ...options,
-          headers,
-          signal: controller.signal
-        }).catch(e => {
-          throw e;
-        });
+     if (!headers.has('Content-Type')) {
+       headers.set('Content-Type', 'application/json');
+     }
 
-        clearTimeout(id);
+     if (this.authToken) {
+       headers.set('Authorization', `Bearer ${this.authToken}`);
+     }
 
-        const data = await response.json();
+     try {
+       const controller = new AbortController();
+       const id = setTimeout(() => controller.abort(), 5000); 
 
-        if (!response.ok) {
+       const response = await fetch(url, {
+         ...options,
+         headers,
+         signal: controller.signal
+       }).catch(e => {
+         throw e;
+       });
+
+       clearTimeout(id);
+       const data = await response.json();
+
+       if (!response.ok) {
           throw new Error(data.error || `HTTP ${response.status}`);
-        }
+       }
 
-        return {
-          success: true,
-          ...data,
-        };
-      } catch (error: any) {
-        console.warn(`API request to ${endpoint} failed, falling back to simulation:`, error);
-      }
+       return {
+         success: true,
+         ...data,
+       };
+     } catch (error: any) {
+       console.warn(`API request to ${endpoint} failed, falling back to simulation:`, error);
+     }
+     */
     }
 
     // =========================================================

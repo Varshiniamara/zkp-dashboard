@@ -7,7 +7,7 @@
     "dev:backend": "tsx watch backend/src/app.ts",
     "dev:unified": "node server.js",
     "start": "next start",
-    "build": "next build && npm run build:backend",
+    "build": "next build",
     "build:backend": "node scripts/build-backend.js",
     "start:all": "npm run build:backend && node server.js",
     "start:unified": "npm run build:backend && node server.js",
