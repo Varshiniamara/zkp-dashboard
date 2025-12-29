@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Dispatch, SetStateAction } from "react"
 import { Button } from "@/components/ui/button"
 import type { DashboardTab } from "@/types/tabs"
@@ -9,14 +10,13 @@ interface NavigationProps {
   setActiveTab: Dispatch<SetStateAction<DashboardTab>>
 }
 
-const navItems: { id: DashboardTab; label: string; href?: string }[] = [
-  { id: "home", label: "Home" },
+const navItems: { id: DashboardTab; label: string; href: string }[] = [
+  { id: "home", label: "Home", href: "/" },
   { id: "demo", label: "🚀 Demo", href: "/demo" },
-  { id: "dataset", label: "Dataset" },
-  { id: "snark", label: "zk-SNARK" },
-  { id: "stark", label: "zk-STARK" },
-  { id: "rollup", label: "zk-Rollup" },
-  { id: "hybrid", label: "Hybrid Flow" },
+  { id: "snark", label: "zk-SNARK", href: "/demo?tab=snark" },
+  { id: "stark", label: "zk-STARK", href: "/demo?tab=stark" },
+  { id: "rollup", label: "zk-Rollup", href: "/demo?tab=rollup" },
+  { id: "hybrid", label: "Hybrid Flow", href: "/demo?tab=hybrid" },
 ]
 
 export default function Navigation({ activeTab, setActiveTab }: NavigationProps) {
@@ -31,30 +31,11 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
         </div>
 
         <div className="flex gap-1 overflow-x-auto">
-          {navItems.map((item) => {
-            if (item.href) {
-              return (
-                <a key={item.id} href={item.href} onClick={() => setActiveTab(item.id)}>
-                  <Button
-                    variant={activeTab === item.id ? "default" : "ghost"}
-                    size="sm"
-                    className={
-                      activeTab === item.id
-                        ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent"
-                    }
-                  >
-                    {item.label}
-                  </Button>
-                </a>
-              )
-            }
-            return (
+          {navItems.map((item) => (
+            <Link key={item.id} href={item.href} onClick={() => setActiveTab(item.id)}>
               <Button
-                key={item.id}
                 variant={activeTab === item.id ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setActiveTab(item.id)}
                 className={
                   activeTab === item.id
                     ? "bg-sidebar-primary text-sidebar-primary-foreground"
@@ -63,8 +44,8 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
               >
                 {item.label}
               </Button>
-            )
-          })}
+            </Link>
+          ))}
         </div>
       </div>
     </nav>

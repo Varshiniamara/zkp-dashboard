@@ -74,7 +74,7 @@ async function compileCircuit(circuitName) {
 
   try {
     // Compile the circuit
-    runCommand(`npx circom ${circuitPath} --r1cs --wasm --sym -o ${CONFIG.buildDir}`);
+    runCommand(`npx circom "${circuitPath}" --r1cs --wasm --sym -o "${CONFIG.buildDir}"`);
 
     // Paths for generated files
     const wasmPath = path.join(CONFIG.buildDir, `${circuitName}_js`, `${circuitName}.wasm`);
@@ -82,11 +82,11 @@ async function compileCircuit(circuitName) {
     const zkeyPath = path.join(CONFIG.buildDir, `${circuitName}.zkey`);
 
     // Generate zkey (trusted setup)
-    runCommand(`npx snarkjs groth16 setup ${r1csPath} ${CONFIG.powersOfTau.localPath} ${zkeyPath}`);
+    runCommand(`npx snarkjs groth16 setup "${r1csPath}" "${CONFIG.powersOfTau.localPath}" "${zkeyPath}"`);
 
     // Export verification key
     const vkeyPath = path.join(CONFIG.buildDir, `${circuitName}_verification_key.json`);
-    runCommand(`npx snarkjs zkey export verificationkey ${zkeyPath} ${vkeyPath}`);
+    runCommand(`npx snarkjs zkey export verificationkey "${zkeyPath}" "${vkeyPath}"`);
 
     // Generate a sample proof if test inputs are provided
     if (CONFIG.testInputs[circuitName]) {
@@ -118,14 +118,14 @@ async function generateSampleProof(circuitName, input) {
   console.log(`📝 Input written to: ${inputPath}`);
 
   // Generate witness
-  runCommand(`node ${CONFIG.buildDir}/${circuitName}_js/generate_witness.js ${wasmPath} ${inputPath} ${witnessPath}`);
+  runCommand(`node "${CONFIG.buildDir}/${circuitName}_js/generate_witness.js" "${wasmPath}" "${inputPath}" "${witnessPath}"`);
 
   // Generate proof
-  runCommand(`npx snarkjs groth16 prove ${zkeyPath} ${witnessPath} ${proofPath} ${publicPath}`);
+  runCommand(`npx snarkjs groth16 prove "${zkeyPath}" "${witnessPath}" "${proofPath}" "${publicPath}"`);
 
   // Verify proof
   const vkeyPath = path.join(CONFIG.buildDir, `${circuitName}_verification_key.json`);
-  runCommand(`npx snarkjs groth16 verify ${vkeyPath} ${publicPath} ${proofPath}`);
+  runCommand(`npx snarkjs groth16 verify "${vkeyPath}" "${publicPath}" "${proofPath}"`);
 
   console.log(`✅ Sample proof generated and verified for ${circuitName}`);
 }

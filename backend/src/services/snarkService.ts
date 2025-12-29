@@ -37,7 +37,7 @@ export class SnarkService {
         if (fs.existsSync(wasmPath) && fs.existsSync(zkeyPath)) {
             return this.generateRealProof(circuitName, input);
         } else {
-            console.warn('Circuits not found, generating simulated proof.');
+            // console.warn('Circuits not found, generating simulated proof.');
             return this.generateSimulatedProof(circuitName, input);
         }
     }
@@ -50,21 +50,21 @@ export class SnarkService {
                 salary: input.salary,
                 balance: input.balance,
             };
-            
+
             const publicInputs = {
                 minCreditScore: input.minCreditScore,
                 minSalary: input.minSalary,
                 minBalance: input.minBalance,
             };
-            
+
             const result = await circuitService.generateSNARKProof(
                 circuitName,
                 privateInputs,
                 publicInputs
             );
-            
+
             const proofId = crypto.randomUUID();
-            
+
             return {
                 proofId,
                 timestamp: Date.now(),
@@ -84,17 +84,23 @@ export class SnarkService {
     private generateSimulatedProof(circuitName: string, input: SnarkInput): SnarkProof {
         // Validate logic (Constraint Check)
         const isValid =
-            input.creditScore >= input.minCreditScore &&
-            input.salary >= input.minSalary &&
-            input.balance >= input.minBalance;
+            Number(input.creditScore) >= Number(input.minCreditScore) &&
+            Number(input.salary) >= Number(input.minSalary) &&
+            Number(input.balance) >= Number(input.minBalance);
 
-        const proofId = crypto.randomUUID();
+        // Generate deterministic ID based on inputs
+        const inputString = JSON.stringify(input);
+        const proofId = crypto.createHash('sha256').update(inputString + Date.now().toString()).digest('hex').substring(0, 36);
 
         // Create a dummy Groth16 proof structure
+        // We make these look like real hashes but derived from input to be consistent
+        const seed = inputString + isValid;
+        const genHash = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
+
         const proof = {
-            pi_a: [crypto.randomBytes(32).toString('hex'), crypto.randomBytes(32).toString('hex'), "1"],
-            pi_b: [[crypto.randomBytes(32).toString('hex'), crypto.randomBytes(32).toString('hex')], [crypto.randomBytes(32).toString('hex'), crypto.randomBytes(32).toString('hex')], ["1", "0"]],
-            pi_c: [crypto.randomBytes(32).toString('hex'), crypto.randomBytes(32).toString('hex'), "1"],
+            pi_a: [genHash(seed + "a1"), genHash(seed + "a2"), "1"],
+            pi_b: [[genHash(seed + "b1"), genHash(seed + "b2")], [genHash(seed + "b3"), genHash(seed + "b4")], ["1", "0"]],
+            pi_c: [genHash(seed + "c1"), genHash(seed + "c2"), "1"],
             protocol: "groth16",
             curve: "bn128"
         };

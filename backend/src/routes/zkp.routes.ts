@@ -6,6 +6,7 @@ import {
   getProofHistory,
   runHybridFlow
 } from '../controllers/zkp.controller';
+import { getCircuitCode } from '../controllers/circuit.controller';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.post('/generate', generateProof);
 router.post('/verify', verifyProof);
 router.post('/hybrid', runHybridFlow);
 router.get('/history', getProofHistory);
+router.get('/circuit/:circuitName', getCircuitCode);
 
 export default router;

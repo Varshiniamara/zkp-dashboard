@@ -3,6 +3,7 @@ import crypto from 'crypto';
 interface RollupTransaction {
     userId: number;
     creditScore: number;
+    salary: number;
     balance: number;
 }
 
@@ -12,6 +13,8 @@ interface BatchProof {
     previousStateRoot: string;
     newStateRoot: string;
     transactionCount: number;
+    invalidTransactionCount: number;
+    invalidTransactions: number[];
     proofData: string;
     isValid: boolean;
 }
@@ -26,15 +29,22 @@ export class RollupService {
         const previousStateRoot = this.currentStateRoot;
 
         // 1. Verify each transaction (Simulate L2 checks)
-        const validTransactions = transactions.filter(tx => {
-            // Simple logic: Credit Score > 300 (just an example check)
-            return tx.creditScore > 300;
+        const validTransactions: RollupTransaction[] = [];
+        const invalidTransactions: number[] = [];
+
+        transactions.forEach(tx => {
+            // Stricter logic: Credit Score >= 700
+            if (tx.creditScore >= 700) {
+                validTransactions.push(tx);
+            } else {
+                invalidTransactions.push(tx.userId);
+            }
         });
 
         // 2. Update State (Calculate new Merkle Root)
         // We hash the transactions to get the new root
         const leaves = validTransactions.map(tx =>
-            crypto.createHash('sha256').update(`${tx.userId}-${tx.creditScore}-${tx.balance}`).digest('hex')
+            crypto.createHash('sha256').update(`${tx.userId}-${tx.creditScore}-${tx.salary}-${tx.balance}`).digest('hex')
         );
         const newStateRoot = this.merkleRoot(leaves);
 
@@ -51,6 +61,8 @@ export class RollupService {
             previousStateRoot,
             newStateRoot,
             transactionCount: validTransactions.length,
+            invalidTransactionCount: invalidTransactions.length,
+            invalidTransactions,
             proofData,
             isValid: true
         };

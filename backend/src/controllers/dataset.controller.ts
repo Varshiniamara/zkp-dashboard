@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { ErrorResponse } from '../middleware/error.middleware';
 
-const DATA_DIR = path.join(__dirname, '../../../data');
+const DATA_DIR = path.join(__dirname, '../../../');
 const USERS_JSON = path.join(DATA_DIR, 'test/data/users.json');
 
 /**
@@ -16,6 +16,8 @@ export const getDataset = async (req: Request, res: Response) => {
 
     // Read dataset from file
     let users: any[] = [];
+    console.log('Dataset path:', USERS_JSON);
+    console.log('File exists:', fs.existsSync(USERS_JSON));
     if (fs.existsSync(USERS_JSON)) {
       const fileContent = fs.readFileSync(USERS_JSON, 'utf-8');
       users = JSON.parse(fileContent);

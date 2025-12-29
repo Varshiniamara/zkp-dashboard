@@ -32,7 +32,9 @@ const handle = nextApp.getRequestHandler();
 const expressApp = express();
 
 // Middleware
-expressApp.use(helmet());
+expressApp.use(helmet({
+  contentSecurityPolicy: false,
+}));
 expressApp.use(cors({
   origin: `http://${hostname}:${port}`,
   credentials: true,
