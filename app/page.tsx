@@ -1,18 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Navigation from "@/components/navigation"
 import Hero from "@/components/hero"
 import ProofTypeSelector from "@/components/proof-type-selector"
-import SNARKDetails from "@/components/snark-details"
-import STARKDetails from "@/components/stark-details"
 import HybridFlowDemo from "@/components/hybrid-flow-demo"
 import ProofGenerator from "@/components/proof-generator"
 import DatasetViewer from "@/components/dataset-viewer"
 import type { DashboardTab } from "@/types/tabs"
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<DashboardTab>("home")
 
@@ -32,7 +30,7 @@ export default function Home() {
           <>
             <Hero setActiveTab={setActiveTab} />
             <ProofTypeSelector
-              setSelectedProofType={(type) => setActiveTab(type)}
+              setSelectedProofType={(type: any) => setActiveTab(type)}
               setActiveTab={setActiveTab}
             />
             <div className="container mx-auto px-4 py-8">
@@ -117,5 +115,13 @@ export default function Home() {
         {activeTab === "hybrid" && <HybridFlowDemo />}
       </main>
     </div>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   )
 }
