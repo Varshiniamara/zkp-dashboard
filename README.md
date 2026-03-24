@@ -169,17 +169,3 @@ npm run dev:full
 
 ---
 
-## 🤝 7. Open Source Contributions
-
-We believe in advancing the frontiers of digital privacy collaboratively. If you are researching applied zero-knowledge cryptography or blockchain scalability:
-1. Fork the Project.
-2. Create your Feature Branch (`git checkout -b feature/AmazingPrimitive`).
-3. Commit your Changes (`git commit -m 'Add some AmazingPrimitive'`).
-4. Push to the Branch (`git push origin feature/AmazingPrimitive`).
-5. Open a Pull Request.
-
----
-<div align="center">
-  <b>Engineering absolute privacy through applied mathematics.</b><br>
-  Developed with 🔐 and ❤️.
-</div>
