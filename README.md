@@ -11,6 +11,9 @@
 
 *An authoritative, open-source demonstration of orchestrated zk-SNARK, zk-STARK, and zk-Rollup cryptographic primitives designed for the modern decentralized web.*
 
+> ### 🚀 **[Access the Live Interactive Demo Here: zkp-dashboard-c5xe.vercel.app](https://zkp-dashboard-c5xe.vercel.app/)**
+> *Interact with the hybrid framework in real-time. No setup required.*
+
 ---
 </div>
 
